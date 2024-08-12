@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:news/home/news/news_widget.dart';
 import 'package:news/home/tabs/tab_item.dart';
 import 'package:news/model/SourceResponse.dart';
 
@@ -35,7 +36,9 @@ class _TabWidgetState extends State<TabWidget> {
                       isSelected:
                           selectedIndex == widget.sourceList.indexOf(source)))
                   .toList(),
-            )
+            ),
+            Expanded(
+                child: NewsWidget(source: widget.sourceList[selectedIndex])),
           ],
         ));
   }

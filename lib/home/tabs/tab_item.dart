@@ -11,7 +11,7 @@ class TabItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.all(8),
       margin: EdgeInsets.only(top: 10),
       decoration: BoxDecoration(
           color: isSelected ? AppColors.primaryColor : Colors.transparent,

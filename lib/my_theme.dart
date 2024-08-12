@@ -18,6 +18,15 @@ class MyThemeDats {
       color: AppColors.whiteColor,
       fontSize: 22,
       fontWeight: FontWeight.w400,
-    )),
+      ),
+      bodyLarge: GoogleFonts.poppins(
+          color: AppColors.blackColor,
+          fontSize: 16,
+          fontWeight: FontWeight.bold),
+      bodyMedium: GoogleFonts.poppins(
+          color: AppColors.grayColor,
+          fontSize: 13,
+          fontWeight: FontWeight.w400),
+    ),
   );
 }
