@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:news/colors.dart';
 import 'package:news/home/news/news_item.dart';
+import 'package:news/home/news/view_model_news.dart';
 import 'package:news/model/NewsResponse.dart';
 import 'package:news/model/SourceResponse.dart';
 import 'package:news/model/api_manager.dart';
+import 'package:provider/provider.dart';
 
 class NewsWidget extends StatefulWidget {
   Source source;
@@ -15,9 +17,62 @@ class NewsWidget extends StatefulWidget {
 }
 
 class _NewsWidgetState extends State<NewsWidget> {
+  ViewModelNews viewModel = ViewModelNews();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    viewModel.getNews(widget.source.id ?? '');
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<NewsResponse?>(
+    return ChangeNotifierProvider(
+      create: (context) => viewModel,
+      child: Consumer<ViewModelNews>(builder: (context, viewModel, child) {
+        if (viewModel.errorMessage != null) {
+          return Center(
+            child: Container(
+              padding: EdgeInsets.all(20),
+              margin: EdgeInsets.all(20),
+              height: 200,
+              decoration: BoxDecoration(
+                color: Color(0xffd9d5d5),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                children: [
+                  Text(viewModel.errorMessage!),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  ElevatedButton(
+                      onPressed: () {
+                        viewModel.getNews(widget.source.id ?? '');
+                      },
+                      child: Text('try again'))
+                ],
+              ),
+            ),
+          );
+        } else if (viewModel.newList == null) {
+          return Center(
+              child: CircularProgressIndicator(
+            color: AppColors.primaryColor,
+          ));
+        } else {
+          return ListView.builder(
+            itemBuilder: (context, index) {
+              return NewsItem(news: viewModel.newList![index]);
+            },
+            itemCount: viewModel.newList!.length,
+          );
+        }
+      }),
+    );
+
+    FutureBuilder<NewsResponse?>(
         future: ApiManager.getNews(widget.source.id ?? ''),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

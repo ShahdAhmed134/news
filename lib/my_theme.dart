@@ -6,7 +6,8 @@ class MyThemeDats {
   static ThemeData LightMode = ThemeData(
       primaryColor: AppColors.primaryColor,
       appBarTheme: AppBarTheme(
-          backgroundColor: AppColors.primaryColor,
+        iconTheme: IconThemeData(color: AppColors.whiteColor),
+        backgroundColor: AppColors.primaryColor,
           elevation: 0,
         centerTitle: true,
         shape: RoundedRectangleBorder(
@@ -27,6 +28,10 @@ class MyThemeDats {
           color: AppColors.grayColor,
           fontSize: 13,
           fontWeight: FontWeight.w400),
+      bodySmall: GoogleFonts.poppins(
+          color: AppColors.blackColor,
+          fontSize: 20,
+          fontWeight: FontWeight.w600),
     ),
   );
 }
