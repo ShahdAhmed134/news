@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:news/colors.dart';
+import 'package:news/home/category/category_details.dart';
+import 'package:news/home/home_drawer.dart';
+import 'package:news/home/setting/setting.dart';
 import 'package:news/home/tabs/tab_widget.dart';
 import 'package:news/model/SourceResponse.dart';
 import 'package:news/model/api_manager.dart';
+import 'package:news/model/category.dart';
+
+import 'category/category_fragment.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = 'home';
@@ -29,64 +35,47 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: Colors.transparent,
           appBar: AppBar(
             title: Text(
-              'News App',
+              selectedClickMenu == HomeDrawer.setting
+                  ? 'Setting'
+                  : selectedCategory == null
+                      ? 'News App'
+                      : selectedCategory!.title,
               style: Theme.of(context).textTheme.titleLarge,
             ),
             centerTitle: true,
           ),
-          body: FutureBuilder<SourceResponse?>(
-              future: ApiManager.getSource(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                      child: CircularProgressIndicator(
-                    color: AppColors.primaryColor,
-                  ));
-                } else if (snapshot.hasError) {
-                  return Column(
-                    children: [
-                      Text('something wrong'),
-                      ElevatedButton(
-                          onPressed: () {
-                            ApiManager.getSource();
-                            setState(() {});
-                          },
-                          child: Text('try again'))
-                    ],
-                  );
-                }
-                if (snapshot.data!.status != 'ok') {
-                  return Center(
-                    child: Container(
-                      padding: EdgeInsets.all(20),
-                      margin: EdgeInsets.all(20),
-                      height: 200,
-                      decoration: BoxDecoration(
-                        color: Color(0xffd9d5d5),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Column(
-                        children: [
-                          Text(snapshot.data!.message!),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          ElevatedButton(
-                              onPressed: () {
-                                ApiManager.getSource();
-                                setState(() {});
-                              },
-                              child: Text('try again'))
-                        ],
-                      ),
+          drawer: Drawer(
+            child: HomeDrawer(
+              onClickMenu: onClickMenu,
+            ),
+          ),
+          body: selectedClickMenu == HomeDrawer.setting
+              ? Setting()
+              : selectedCategory == null
+                  ? CategoryFragment(
+                      onClickCategory: onClickCategory,
+                    )
+                  : CategoryDetails(
+                      category: selectedCategory!,
                     ),
-                  );
-                }
-                var SourceList = snapshot.data!.sources!;
-                return TabWidget(sourceList: SourceList);
-              }),
         )
       ],
     );
+  }
+
+  Category? selectedCategory;
+
+  void onClickCategory(Category newCategory) {
+    selectedCategory = newCategory;
+    setState(() {});
+  }
+
+  int selectedClickMenu = HomeDrawer.categories;
+
+  void onClickMenu(int newClickMenu) {
+    selectedClickMenu = newClickMenu;
+    selectedCategory = null;
+    Navigator.pop(context);
+    setState(() {});
   }
 }
