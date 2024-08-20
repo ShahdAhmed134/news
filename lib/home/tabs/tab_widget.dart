@@ -17,6 +17,11 @@ class _TabWidgetState extends State<TabWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.sourceList.isEmpty) {
+      return Center(
+        child: Text('No sources available for this language.'),
+      );
+    }
     return DefaultTabController(
         length: widget.sourceList.length,
         child: Column(
