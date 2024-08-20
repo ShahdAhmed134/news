@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:news/colors.dart';
-import 'package:news/home/category/view_model_category_details.dart';
 import 'package:news/model/category.dart';
-import 'package:provider/provider.dart';
 
 import '../../model/SourceResponse.dart';
 import '../../model/api_manager.dart';
@@ -18,48 +16,11 @@ class CategoryDetails extends StatefulWidget {
 }
 
 class _CategoryDetailsState extends State<CategoryDetails> {
-  ViewModelCategoryDetails viewModel = ViewModelCategoryDetails();
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    viewModel.getSources(widget.category.categoryId);
-  }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => viewModel,
-      child: Consumer<ViewModelCategoryDetails>(
-        builder: (context, viewModel, child) {
-          if (viewModel.errorMessage != null) {
-            return Column(
-              children: [
-                Text(viewModel.errorMessage!),
-                ElevatedButton(
-                    onPressed: () {
-                      viewModel.getSources(widget.category.categoryId);
-                    },
-                    child: Text('try again'))
-              ],
-            );
-          } else if (viewModel.sourceList == null) {
-            return Center(
-                child: CircularProgressIndicator(
-              color: AppColors.primaryColor,
-            ));
-          } else {
-            return TabWidget(sourceList: viewModel.sourceList!);
-          }
-        },
-      ),
-    );
-  }
-}
-
-/*  FutureBuilder<SourceResponse?>(
-        future: ApiManager.getSource(widget.category.categoryId),
+    return FutureBuilder<SourceResponse?>(
+        future: ApiManager.getSource(context, widget.category.categoryId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -72,7 +33,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                 Text('something wrong'),
                 ElevatedButton(
                     onPressed: () {
-                      ApiManager.getSource(widget.category.categoryId);
+                      ApiManager.getSource(context, widget.category.categoryId);
                       setState(() {});
                     },
                     child: Text('try again'))
@@ -97,7 +58,8 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                     ),
                     ElevatedButton(
                         onPressed: () {
-                          ApiManager.getSource(widget.category.categoryId);
+                          ApiManager.getSource(
+                              context, widget.category.categoryId);
                           setState(() {});
                         },
                         child: Text('try again'))
@@ -109,4 +71,5 @@ class _CategoryDetailsState extends State<CategoryDetails> {
           var SourceList = snapshot.data!.sources!;
           return TabWidget(sourceList: SourceList);
         });
-  */
+  }
+}

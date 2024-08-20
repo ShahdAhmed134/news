@@ -1,0 +1,15 @@
+{
+"language": "اللغة",
+"english":"الانجليزى",
+"arabic":"العربى",
+"sports":"الرياضه",
+"general":"عام",
+"health":"الصحة",
+"business":"عمل",
+"entertainment":"ترفيه",
+"science":"علوم",
+"setting": "الاعدادات",
+"newsApp": "تطبيق الأخبار",
+"categories":"فئات",
+"interest":"اختر الفئة \nالتي تهمك"
+}

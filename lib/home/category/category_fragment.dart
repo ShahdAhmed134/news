@@ -1,23 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:news/colors.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:news/home/category/category_item.dart';
 import 'package:news/model/category.dart';
 
-class CategoryFragment extends StatelessWidget {
-  List<Category> categoryList = Category.getCategory();
+class CategoryFragment extends StatefulWidget {
   Function onClickCategory;
 
   CategoryFragment({required this.onClickCategory});
 
   @override
+  State<CategoryFragment> createState() => _CategoryFragmentState();
+}
+
+class _CategoryFragmentState extends State<CategoryFragment> {
+  @override
   Widget build(BuildContext context) {
+    List<Category> categoryList = Category.getCategory(context);
     return Container(
       padding: const EdgeInsets.all(18.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            "Pick your category \nof interest",
+            AppLocalizations.of(context)!.interest,
             style: Theme.of(context).textTheme.bodySmall,
           ),
           SizedBox(
@@ -34,7 +39,7 @@ class CategoryFragment extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return InkWell(
                       onTap: () {
-                        onClickCategory(categoryList[index]);
+                        widget.onClickCategory(categoryList[index]);
                       },
                       child: CategoryItem(
                           category: categoryList[index], index: index));
